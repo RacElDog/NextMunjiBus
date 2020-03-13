@@ -1,14 +1,10 @@
 package com.example.nextmunjibus;
 
 import android.icu.util.Calendar;
+import android.icu.util.CurrencyAmount;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class Scheduler {
 
 
@@ -25,26 +21,26 @@ public class Scheduler {
         CreateDictionaries();
     }
 
-    public int GetNthNearestBus(int a_Nth, int a_TimeInMinutes ,String a_WeekDay){
-        int idx = GetUpperLimitIndex(a_TimeInMinutes, m_WeekTimeSlots.get(a_WeekDay));
+    public int GetNthNearestBus(int a_Nth, int a_TimeInMinutes ,int a_WeekDay){
+        int idx= GetUpperLimitIndex(a_TimeInMinutes, m_WeekTimeSlots.get(a_WeekDay));
         return m_WeekTimeSlots.get(a_WeekDay).get(a_Nth + idx);
     }
 
-    private HashMap<String, ArrayList<Integer>> m_WeekTimeSlots;
+    private HashMap<Integer, ArrayList<Integer>> m_WeekTimeSlots;
 
     private void CreateDictionaries(){
         CreateWeekDayTimeSlotsArray();
         CreateWeekEndTimeSlotsArray();
 
-        m_WeekTimeSlots = new HashMap<String, ArrayList<Integer>>(){
+        m_WeekTimeSlots = new HashMap<Integer, ArrayList<Integer>>(){
             {
-                put("monday", m_MonTimeSlots);
-                put("tuesday", m_TueFriTimeSlots);
-                put("wednesday", m_TueFriTimeSlots);
-                put("thursday", m_TueFriTimeSlots);
-                put("friday", m_TueFriTimeSlots);
-                put("saturday", m_SatTimeSlots);
-                put("sunday", m_SunTimeSlots);
+                put(Calendar.MONDAY, m_MonTimeSlots);
+                put(Calendar.TUESDAY, m_TueFriTimeSlots);
+                put(Calendar.WEDNESDAY, m_TueFriTimeSlots);
+                put(Calendar.THURSDAY, m_TueFriTimeSlots);
+                put(Calendar.FRIDAY, m_TueFriTimeSlots);
+                put(Calendar.SATURDAY, m_SatTimeSlots);
+                put(Calendar.SUNDAY, m_SunTimeSlots);
             }
         };
     }

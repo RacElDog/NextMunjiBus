@@ -4,21 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity" >
+    android:background="#383C3C"
+    tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/TimeTextView"
-        android:layout_width="330dp"
-        android:layout_height="411dp"
+        android:layout_width="262dp"
+        android:layout_height="249dp"
         android:layout_marginStart="177dp"
         android:layout_marginTop="356dp"
         android:layout_marginEnd="176dp"
         android:layout_marginBottom="356dp"
-        android:text=""
+        android:text="In \n30 \n Minutes"
         android:textAlignment="center"
-        android:textSize="60dp"
+        android:textColor="#BF360C"
+        android:textSize="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="600dp"
+        android:layout_height="684dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.495"
+        app:srcCompat="?android:attr/listChoiceIndicatorSingle" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="131dp"
+        android:layout_height="68dp"
+        android:text="Munji"
+        android:textColor="#E65100"
+        android:textSize="45sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.068"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.069" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="131dp"
+        android:layout_height="68dp"
+        android:text="Main"
+        android:textAlignment="textEnd"
+        android:textColor="#E65100"
+        android:textSize="45sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.938"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.069" />
+
+    <ImageView
+        android:id="@+id/ArrowImageView"
+        android:layout_width="135dp"
+        android:layout_height="46dp"
+        android:scaleX="-3"
+        android:scaleY="1.5"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintEnd_toStartOf="@+id/textView2"
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.545"
+        app:srcCompat="@drawable/abc_vector_test"
+        android:clickable="true"
+        android:onClick="DestinatonChange"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
