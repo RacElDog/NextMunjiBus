@@ -4,6 +4,7 @@ import android.icu.util.Calendar;
 import android.icu.util.CurrencyAmount;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 public class Scheduler {
 
@@ -15,113 +16,66 @@ public class Scheduler {
         MainCampus
     }
 
-    private ArrayList<Integer> m_MonTimeSlots, m_TueFriTimeSlots, m_SatTimeSlots, m_SunTimeSlots;
+    private ArrayList<Integer> m_WeekDayTimeSlots, m_WeekEndTimeSlots;
 
     public Scheduler(){
-        CreateDictionaries();
+        m_WeekDayTimeSlots = new ArrayList<>(
+                Arrays.asList(
+                        7 * 60 + 30, 8 * 60 + 30, 9 * 60,
+                        9 * 60 + 40, 10 * 60 + 10, 10 * 60 + 40, 11 * 60 + 10,
+                        12 * 60 + 10, 13 * 60 + 40, 14 * 60 + 40, 15 * 60 + 40, 16 * 60 + 40,
+                        17 * 60 + 10, 17 * 60 + 40, 18 * 60 + 10, 18 * 60 + 40, 19 * 60 + 10, 19 * 60 + 40, 20 * 60 + 40, 21 * 60 + 10, 21 * 60 + 40, 22 * 60 + 10, 22 * 60 + 40,
+                        23 * 60 + 40, 24 * 60 + 40, 25 * 60 + 40, 26 * 60 + 40
+                )
+        );
+
+        m_WeekEndTimeSlots = new ArrayList<>(
+                Arrays.asList(
+                        8 * 60 + 10, 9 * 60 + 40, 11 * 60 + 10, 12 * 60 + 40, 14 * 60 + 10, 15 * 60 + 40, 17 * 60 + 10,
+                        18 * 60 + 40, 20 * 60 + 10, 21 * 60 + 40, 23 * 60 + 10, 24 * 60 + 40, 26 * 60 + 10
+                )
+        );
     }
 
-    public int GetNthNearestBus(int a_Nth, int a_TimeInMinutes ,int a_WeekDay){
-        int idx= GetUpperLimitIndex(a_TimeInMinutes, m_WeekTimeSlots.get(a_WeekDay));
-        return m_WeekTimeSlots.get(a_WeekDay).get(a_Nth + idx);
+    public int GetNthNearestBus(Destination a_Destination ,int a_Nth, int a_TimeInMinutes ,int a_WeekDay){
+        if (a_Destination == Destination.MunjiCampus){
+            a_TimeInMinutes -= 20;
+        }
+        ArrayList<Integer> dayTimeSlot;
+        switch (a_WeekDay){
+            case Calendar.SATURDAY:
+            case Calendar.SUNDAY:
+                if (a_TimeInMinutes > 5 * 60){
+                    dayTimeSlot = m_WeekEndTimeSlots;
+                    break;
+                }
+                else{
+                    dayTimeSlot = m_WeekDayTimeSlots;
+                    a_TimeInMinutes += 24 * 60;
+                    break;
+                }
+            case Calendar.MONDAY:
+                if (a_TimeInMinutes > 5 * 60){
+                    dayTimeSlot = m_WeekDayTimeSlots;
+                    break;
+                }
+                else{
+                    dayTimeSlot = m_WeekEndTimeSlots;
+                    a_TimeInMinutes += 24 * 60;
+                    break;
+                }
+            default:
+                dayTimeSlot = m_WeekDayTimeSlots;
+        }
+        int idx= GetUpperLimitIndex(a_TimeInMinutes, dayTimeSlot);
+        int ret = dayTimeSlot.get(a_Nth + idx);
+        if (a_Destination == Destination.MunjiCampus){
+            ret += 20;
+        }
+        return ret;
     }
 
-    private HashMap<Integer, ArrayList<Integer>> m_WeekTimeSlots;
 
-    private void CreateDictionaries(){
-        CreateWeekDayTimeSlotsArray();
-        CreateWeekEndTimeSlotsArray();
-
-        m_WeekTimeSlots = new HashMap<Integer, ArrayList<Integer>>(){
-            {
-                put(Calendar.MONDAY, m_MonTimeSlots);
-                put(Calendar.TUESDAY, m_TueFriTimeSlots);
-                put(Calendar.WEDNESDAY, m_TueFriTimeSlots);
-                put(Calendar.THURSDAY, m_TueFriTimeSlots);
-                put(Calendar.FRIDAY, m_TueFriTimeSlots);
-                put(Calendar.SATURDAY, m_SatTimeSlots);
-                put(Calendar.SUNDAY, m_SunTimeSlots);
-            }
-        };
-    }
-
-    private void CreateWeekDayTimeSlotsArray(){
-        ArrayList<Integer> commonTimeSlots = new ArrayList<>();
-        commonTimeSlots.ensureCapacity(27);
-
-        // TODO: Make Array Creation more Compact
-        // 7:30 - 9:00, 30 min interval
-        for (int i = 0; i < 4; i++){
-            commonTimeSlots.add((7 * 60 + 30) + 30 * i);
-        }
-
-        // 9:40 - 11:10, 30 min
-        for (int i = 0; i < 4; i++){
-            commonTimeSlots.add((9 * 60 + 40) + 30 * i);
-        }
-
-        // 12:10
-        commonTimeSlots.add(12 * 60 + 10);
-
-
-        // 13:40 - 16:40, 60 min
-        for (int i = 0; i < 4; i++){
-            commonTimeSlots.add((13 * 60 + 40) + 60 * i);
-        }
-
-        // 17:10 - 19:40, 30 min
-        for (int i = 0; i < 6; i++){
-            commonTimeSlots.add((17 * 60 + 10) + 30 * i);
-        }
-
-        //20:40 - 21:40, 30 min
-        for (int i = 0; i < 3; i++){
-            commonTimeSlots.add((20 * 60 + 40) + 30 * i);
-        }
-
-        // 22:40 - 23:40
-
-        for (int i = 0; i < 2; i++){
-            commonTimeSlots.add((22 * 60 + 40) + 60 * i);
-        }
-
-        m_MonTimeSlots = new ArrayList<>(commonTimeSlots);
-        m_TueFriTimeSlots = new ArrayList<>(commonTimeSlots);
-
-        // Tuesday - Friday, 0:40 - 2:40, 60 min
-
-        for (int i = 0; i < 3; i++){
-            m_TueFriTimeSlots.add(0, 2 * 60 + 40 - 60 * i);
-        }
-
-        // Monday, 0:40 and 2:10
-        for (int i = 0; i < 2; i++){
-            m_MonTimeSlots.add(0, 2 * 60 + 10 - 90 * i);
-        }
-    }
-
-    private void CreateWeekEndTimeSlotsArray(){
-        ArrayList<Integer> commonTimeSlots = new ArrayList<>();
-        commonTimeSlots.ensureCapacity(21);
-
-        // 8:10 - 23:10, 90 min
-        for (int i = 0; i < 11; i++) {
-            commonTimeSlots.add((8 * 60 + 10) + 90 * i);
-        }
-
-        m_SatTimeSlots = new ArrayList<>(commonTimeSlots);
-        m_SunTimeSlots = new ArrayList<>(commonTimeSlots);
-
-        // Saturday, 0:40 - 2:40, 60 min
-        for (int i = 0; i < 3; i++) {
-            m_SatTimeSlots.add(0, 2 * 60 + 40 - 60 * i);
-        }
-
-        // Sunday, 0:40 - 2:10
-        for (int i = 0; i < 2; i++) {
-            m_SunTimeSlots.add(0, 2 * 60 + 10 - 90 * i);
-        }
-    }
 
     private int GetUpperLimitIndex(int a_Target, ArrayList<Integer> a_List){
         int idx = 0;
@@ -131,6 +85,4 @@ public class Scheduler {
         }
         return idx;
     }
-
-
 }
